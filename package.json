@@ -1,0 +1,56 @@
+{
+  "name": "aws-multi-env",
+  "version": "0.0.1",
+  "description": "Rename and remove files to match deployment environment.",
+  "main": "index.js",
+  "files": [
+    "cli.js",
+    "index.js",
+    "scripts/run-postinstall.js"
+  ],
+  "repository": "https://github.com/DiogoAbu/aws-multi-env.git",
+  "author": "Diogo de Azevedo Silva <diogodeazevedosilva@gmail.com>",
+  "license": "MIT",
+  "bin": {
+    "aws-multi-env": "index.js"
+  },
+  "scripts": {
+    "aws-multi-env": "node index.js",
+    "eslint": "eslint . --ext .ts,.tsx,.js,.jsx --max-warnings 0 --config ./.eslintrc",
+    "prettier": "prettier \"**/{*,}.{json,*rc}\" --config ./.prettierrc --check",
+    "lint": "yarn eslint && yarn prettier",
+    "lint-fix": "yarn eslint --fix && yarn prettier --write",
+    "prepare": "husky install",
+    "postinstall": "node scripts/run-postinstall.js"
+  },
+  "lint-staged": {
+    "{*,}.{j,t}s{,x}": "eslint --config ./.eslintrc --cache --fix",
+    "{*,}.{json,*rc}": "prettier --config ./.prettierrc --write"
+  },
+  "devDependencies": {
+    "@babel/core": "7.19.3",
+    "@babel/eslint-parser": "7.19.1",
+    "@commitlint/cli": "^17.1.2",
+    "@commitlint/config-conventional": "^17.1.0",
+    "@saithodev/semantic-release-backmerge": "^2.1.2",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/npm": "^9.0.1",
+    "babel-eslint": "10.1.0",
+    "conventional-changelog-conventionalcommits": "^5.0.0",
+    "eslint": "8.24.0",
+    "eslint-config-prettier": "8.5.0",
+    "eslint-config-superop": "1.4.4",
+    "eslint-plugin-eslint-comments": "3.2.0",
+    "eslint-plugin-import": "2.26.0",
+    "eslint-plugin-jest": "27.0.4",
+    "eslint-plugin-prettier": "4.2.1",
+    "eslint-plugin-simple-import-sort": "8.0.0",
+    "eslint-plugin-unused-imports": "2.0.0",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "patch-package": "^6.4.7",
+    "postinstall-postinstall": "^2.1.0",
+    "prettier": "2.7.1",
+    "semantic-release": "^19.0.5"
+  }
+}

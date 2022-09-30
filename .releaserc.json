@@ -1,0 +1,50 @@
+{
+  "branches": [
+    "main",
+    {
+      "name": "beta",
+      "prerelease": true
+    }
+  ],
+  "plugins": [
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        "preset": "conventionalcommits"
+      }
+    ],
+    [
+      "@semantic-release/release-notes-generator",
+      {
+        "preset": "conventionalcommits"
+      }
+    ],
+    [
+      "@saithodev/semantic-release-backmerge",
+      {
+        "branches": ["beta"],
+        "message": "chore(release): merge main into beta [skip ci]"
+      }
+    ],
+    [
+      "@semantic-release/npm",
+      {
+        "tarballDir": "dist"
+      }
+    ],
+    [
+      "@semantic-release/github",
+      {
+        "githubUrl": "https://api.github.com",
+        "assets": "dist/*.tgz"
+      }
+    ],
+    [
+      "@semantic-release/git",
+      {
+        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}",
+        "assets": ["package.json"]
+      }
+    ]
+  ]
+}

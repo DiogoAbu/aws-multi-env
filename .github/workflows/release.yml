@@ -1,0 +1,86 @@
+name: Generate Release and Publish to NPM
+
+on:
+  push:
+    branches:
+      - main
+      - beta
+
+env:
+  node-version: 16
+  git-author-name: semantic-release-bot
+  git-author-email: semantic-release-bot@martynus.net
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    steps:
+      - name: Increase watchers to fix Docker
+        run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
+      - name: Checkout the repo
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.node-version }}
+
+      - name: Get Yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Cache Yarn dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 10
+          max_attempts: 5
+          retry_on: error
+          command: yarn install --prefer-offline --frozen-lockfile --silent
+
+      - name: Import GPG key
+        id: import-gpg
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+          git_tag_gpgsign: true
+
+      - name: Start linter
+        run: |
+          yarn lint-fix
+          [[ `git status --porcelain` ]] || exit 0
+          git remote set-url origin "https://x-access-token:$GITHUB_TOKEN@github.com/${{ github.repository }}.git"
+          git add .
+          git commit -m "style: lint fixes [skip ci]" --no-verify
+          git push -u origin ${{ github.ref }} --no-verify
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
+          GIT_AUTHOR_NAME: ${{ env.git-author-name }}
+          GIT_AUTHOR_EMAIL: ${{ env.git-author-email }}
+          GIT_COMMITTER_NAME: ${{ steps.import-gpg.outputs.name }}
+          GIT_COMMITTER_EMAIL: ${{ steps.import-gpg.outputs.email }}
+
+      - name: Determine version, generate notes, commit and publish tag
+        run: npx semantic-release
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
+          GIT_AUTHOR_NAME: ${{ env.git-author-name }}
+          GIT_AUTHOR_EMAIL: ${{ env.git-author-email }}
+          GIT_COMMITTER_NAME: ${{ steps.import-gpg.outputs.name }}
+          GIT_COMMITTER_EMAIL: ${{ steps.import-gpg.outputs.email }}

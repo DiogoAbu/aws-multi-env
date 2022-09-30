@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "editorconfig.editorconfig",
+    "esbenp.prettier-vscode",
+    "vivaxy.vscode-conventional-commits",
+    "yzhang.markdown-all-in-one"
+  ]
+}
