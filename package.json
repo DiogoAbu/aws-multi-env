@@ -1,6 +1,6 @@
 {
   "name": "aws-multi-env",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Rename and remove files to match deployment environment.",
   "main": "index.js",
   "files": [
