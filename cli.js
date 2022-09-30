@@ -38,5 +38,5 @@ module.exports = yargs(processArgs)
     default: os.tmpdir(),
     type: 'string',
     describe:
-      'Directory to place files that are not from the current environment, will be removed once script is done.',
+      'Directory to place files that are not from the current environment, it will create and subfolder and will be removed once script is done.',
   });

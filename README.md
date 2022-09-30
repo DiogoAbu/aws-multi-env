@@ -28,18 +28,23 @@
 
 When deploy to AWS you might want to have different configurations files per environment, and this package does just that.
 
-It finds files prepended with an environment key and renames to proper naming, and remove others.
+It finds files prepended with an environment key and renames to proper naming, remove files from other environments and keep the ones without especific env.
+
+It uses the regex `/.+[.][a-z]+\..+$/`, so it matches files like this `file.prod.config`, `file.staging.config`, but not `file.config`.
 
 Example for deploy on `prod`:
 ```
-Renamed: ./.ebextensions/prod-migration.config => ./.ebextensions/migration.config
-Removed: ./.ebextensions/staging-certbot.config
+📁 Renaming files from "prod" to correct name, and removing other files
+      Renamed: ./.ebextensions/file.prod.config => ./.ebextensions/file.config
+      Removed: ./.ebextensions/other.staging.config
+      Keep: ./.ebextensions/www.config
 ```
 
 And then when build is finished:
 ```
-Renamed: ./.ebextensions/migration.config => ./.ebextensions/prod-migration.config
-Restored: ./.ebextensions/staging-certbot.config
+📁 Renaming files back to "prod", and restoring removed files
+      Renamed: ./.ebextensions/file.config => ./.ebextensions/file.prod.config
+      Restored: ./.ebextensions/other.staging.config
 ```
 
 ## 🔧 Installation
@@ -67,7 +72,7 @@ Use on CI to just build, zip and deploy using an action like [beanstalk-deploy](
 | --buildCmd   | Command to run after files were renamed/removed and are ready.                                                                                                                                                               | [string] [default: "yarn build-and-zip"]                       |
 | --deployCmd  | Command to run after build, at this point the files were reverted and are no longer ready. The `--env` will be appended to this command.                                                                                     | [string] [default: "eb deploy"]                                |
 | --skipDeploy | Setting this to true will skip the deploy command.                                                                                                                                                                           | [boolean] [default: false]                                     |
-| --tempDir    | Directory to place files that are not from the current environment, will be removed once script is done.                                                                                                                     | [string] [default: os.tmpdir()]                                |
+| --tempDir    | Directory to place files that are not from the current environment, it will create and subfolder and will be removed once script is done.                                                                                    | [string] [default: os.tmpdir()]                                |
 
 ## 💬 Contributing
 
