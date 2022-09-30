@@ -27,6 +27,10 @@
     "{*,}.{j,t}s{,x}": "eslint --config ./.eslintrc --cache --fix",
     "{*,}.{json,*rc}": "prettier --config ./.prettierrc --write"
   },
+  "dependencies": {
+    "fast-glob": "^3.2.12",
+    "yargs": "^17.5.1"
+  },
   "devDependencies": {
     "@babel/core": "7.19.3",
     "@babel/eslint-parser": "7.19.1",
