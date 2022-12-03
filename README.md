@@ -20,6 +20,8 @@
 - [🚀 Introduction](#-introduction)
 - [🔧 Installation](#-installation)
 - [📖 Usage](#-usage)
+  - [Commands](#commands)
+  - [Options](#options)
 - [💬 Contributing](#-contributing)
 - [❤️ Acknowledgments](#️-acknowledgments)
 <!-- [END] Don't edit this section, instead run Markdown AIO: Update Table of Contents -->
@@ -78,6 +80,16 @@ Use on CI:
     yarn build && zip -r "$RUNNER_TEMP/deploy-prod.zip" .
     npx aws-multi-env revert --env "${{ secrets.AWS_ENVIRONMENT_NAME_PROD }}"
 ```
+
+### Commands
+
+| Command | Description                                                    |
+|---------|----------------------------------------------------------------|
+| config  | Output loaded configuration                                    |
+| prepare | Rename and remove files on source folders to match environment |
+| revert  | Undo changes on source folders                                 |
+
+### Options
 
 | Argument              | Description                                                                                                                                                                              | Type                                                           |
 |-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------|

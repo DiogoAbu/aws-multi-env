@@ -14,7 +14,7 @@ const tab = ' '.repeat(2);
 const command: CommandModule<Argv, Argv>['command'] = 'prepare';
 
 const describe: CommandModule<Argv, Argv>['describe'] =
-  'Rename and remove files on source folder to match environment';
+  'Rename and remove files on source folders to match environment';
 
 const handler: CommandModule<Argv, Argv>['handler'] = async (argv) => {
   await checkIfClean(argv);
