@@ -155,3 +155,6 @@ temp/
 
 # We use yarn
 package-*.json
+
+# Cosmiconfig
+*aws-multi-env*

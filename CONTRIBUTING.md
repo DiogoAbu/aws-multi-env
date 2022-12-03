@@ -31,14 +31,8 @@ And to auto-fix some of them:
 yarn lint-fix
 ```
 
-## Commits
-
-We enforce the commit messages to follow the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/).
-
 ## Pull request
 
-The title of your PR should be descriptive, including either [NEW], [IMPROVEMENT] or [FIX] at the beginning, e.g. [FIX] App crashing on startup.
-
-You may share working results prior to finishing, please include [WIP] in the title. This way anyone can look at your code: you can ask for help within the PR if you don't know how to solve a problem.
+The title of your PR should follow the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/), the commits messages made inside the PR are not required to follow this specification because the PR will be squashed and the PR title will be the commit message.
 
 Your PR is automatically inspected by various tools, check their response and try to improve your code accordingly. Requests that fail to build or have wrong coding style won't be merged.

@@ -26,26 +26,9 @@
 
 ## 🚀 Introduction
 
-When deploy to AWS you might want to have different configurations files per environment, and this package does just that.
+When deploying to AWS you might want to have different configurations files per environment, and this package does just that.
 
-It finds files prepended with an environment key and renames to proper naming, remove files from other environments and keep the ones without especific env.
-
-It uses the regex `/.+[.][a-z]+\..+$/`, so it matches files like this `file.prod.config`, `file.staging.config`, but not `file.config`.
-
-Example for deploy on `prod`:
-```
-📁 Renaming files from "prod" to correct name, and removing other files
-      Renamed: ./.ebextensions/file.prod.config => ./.ebextensions/file.config
-      Removed: ./.ebextensions/other.staging.config
-      Keep: ./.ebextensions/www.config
-```
-
-And then when build is finished:
-```
-📁 Renaming files back to "prod", and restoring removed files
-      Renamed: ./.ebextensions/file.config => ./.ebextensions/file.prod.config
-      Restored: ./.ebextensions/other.staging.config
-```
+It finds files that match an environment key and renames to proper naming, remove files from other environments and keep the ones without especific env.
 
 ## 🔧 Installation
 
@@ -53,26 +36,57 @@ There's no need to install [aws-multi-env](https://github.com/DiogoAbu/aws-multi
 
 ## 📖 Usage
 
-Use locally:
+To run any command the working tree on the source folders must be clean.
+
 ```sh
-npx aws-multi-env --env "env-name" --buildCmd "yarn build-and-zip" --deployCmd "eb deploy"
+npx aws-multi-env [command] <options>
 ```
 
-Use on CI to just build, zip and deploy using an action like [beanstalk-deploy](https://github.com/einaregilsson/beanstalk-deploy).
+Preparing files for deployment with an application name `app-server-prod`:
+```sh
+$ npx aws-multi-env prepare --env app-server-prod
+» i  Current environment: prod
+» i  Renaming files from "prod" to correct name, and removing other files
+» i    Removed: ./.ebextensions/certbot.staging.config
+» i    Keep: ./.ebextensions/migration.config
+» i    Removed: ./.ebextensions/ssl.staging.config
+» i    Removed: ./.platform/nginx/conf.d/https_custom.staging.conf
+» √  Environment ready, files were renamed and/or removed
+```
+
+Then, after you build/deploy you can revert the changes to deploy on another environment:
+```sh
+$ npx aws-multi-env revert --env app-server-prod
+» i  Current environment: prod
+» i  Renaming files back and restoring removed files
+» i    Running: git clean ./.ebextensions/** ./.platform/**
+» i    Running: git checkout ./.ebextensions/** ./.platform/**
+» √  Environment restored, files renamed back and/or restored
+```
+
+Use on CI:
 ```yml
-- name: Prepare deploy
+- name: Prepare deploy staging
   run: |
-    npx aws-multi-env --env "${{ secrets.AWS_ENVIRONMENT_NAME }}" --buildCmd "yarn build && zip -r deploy.zip folders to zip" --skipDeploy
+    npx aws-multi-env prepare --env "${{ secrets.AWS_ENVIRONMENT_NAME_STAGING }}"
+    yarn build && zip -r "$RUNNER_TEMP/deploy-staging.zip" .
+    npx aws-multi-env revert --env "${{ secrets.AWS_ENVIRONMENT_NAME_STAGING }}"
+
+- name: Prepare deploy prod
+  run: |
+    npx aws-multi-env prepare --env "${{ secrets.AWS_ENVIRONMENT_NAME_PROD }}"
+    yarn build && zip -r "$RUNNER_TEMP/deploy-prod.zip" .
+    npx aws-multi-env revert --env "${{ secrets.AWS_ENVIRONMENT_NAME_PROD }}"
 ```
 
-| Argument     | Description                                                                                                                                                                                                                  | Type                                                           |
-| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| --env        | Environment name to deploy and match files to, it will match the last portion of the name: `app-server-prod` will match `prod`. If no environment was matched, will get from branch name: `main` = `prod`, beta = `staging`. | [string] [required]                                            |
-| --source     | Array of glob folders to find files.                                                                                                                                                                                         | [array] [default: ["./.ebextensions/\*\*","./.platform/\*\*"]] |
-| --buildCmd   | Command to run after files were renamed/removed and are ready.                                                                                                                                                               | [string] [default: "yarn build-and-zip"]                       |
-| --deployCmd  | Command to run after build, at this point the files were reverted and are no longer ready. The `--env` will be appended to this command.                                                                                     | [string] [default: "eb deploy"]                                |
-| --skipDeploy | Setting this to true will skip the deploy command.                                                                                                                                                                           | [boolean] [default: false]                                     |
-| --tempDir    | Directory to place files that are not from the current environment, it will create and subfolder and will be removed once script is done.                                                                                    | [string] [default: os.tmpdir()]                                |
+| Argument              | Description                                                                                                                                                                              | Type                                                           |
+|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------|
+| --env                 | Environment name to deploy and match files to, it will match the last portion of the name: `app-server-prod` will match `prod`. If no environment was matched, will match from branches. | [string]                                                       |
+| --envs                | Acceptable environments, optionally mapped to branches. Example: --envs.prod --envs.staging=beta                                                                                         | [string] [required]                                            |
+| --source              | Array of glob folders to find files.                                                                                                                                                     | [array] [default: ["./.ebextensions/\*\*","./.platform/\*\*"]] |
+| --envMatcher          | Regex to match if file is environment specific.                                                                                                                                          | [string] [default: ".+[.][a-z]+\..+$"]                         |
+| --envMatcherSeparator | The environment separator on file names                                                                                                                                                  | [string] [default: "."]                                        |
+| --dryRun              | Run without making any actual changes                                                                                                                                                    | [boolean] [default: false]                                     |
 
 ## 💬 Contributing
 

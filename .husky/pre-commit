@@ -3,4 +3,4 @@
 . "$(dirname "$0")/common.sh"
 
 npx yarn-lock-fix
-yarn lint-staged
+yarn lint-staged --no-stash
