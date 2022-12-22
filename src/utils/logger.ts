@@ -12,12 +12,6 @@ export const logger = new Signale({
   scope: 'aws-multi-env',
   stream: [process.stdout],
   types: {
-    error: {
-      badge: figures.cross,
-      color: 'red',
-      label: '',
-      stream: [process.stderr],
-    },
     log: {
       badge: figures.info,
       color: 'magenta',
@@ -29,6 +23,12 @@ export const logger = new Signale({
       color: 'green',
       label: '',
       stream: [process.stdout],
+    },
+    error: {
+      badge: figures.cross,
+      color: 'red',
+      label: '',
+      stream: [process.stderr],
     },
   },
 });
