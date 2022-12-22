@@ -3,7 +3,6 @@
 import type { Argv } from '../options';
 import type { CommandModule } from 'yargs';
 
-import { checkIfClean } from '../helpers/check-if-clean';
 import { execAsync } from '../utils/exec-async';
 import { logger } from '../utils/logger';
 
@@ -14,8 +13,6 @@ const command: CommandModule<Argv, Argv>['command'] = 'revert';
 const describe: CommandModule<Argv, Argv>['describe'] = 'Undo changes on source folders';
 
 const handler: CommandModule<Argv, Argv>['handler'] = async (argv) => {
-  await checkIfClean(argv);
-
   logger.log('Renaming files back and restoring removed files');
 
   const dirs = argv.source.join(' ');
