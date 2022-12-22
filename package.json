@@ -1,6 +1,6 @@
 {
   "name": "aws-multi-env",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Rename and remove files to match deployment environment.",
   "repository": "https://github.com/DiogoAbu/aws-multi-env.git",
   "author": "Diogo de Azevedo Silva <diogodeazevedosilva@gmail.com>",
