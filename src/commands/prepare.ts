@@ -4,7 +4,7 @@ import type { CommandModule } from 'yargs';
 import fs from 'fs/promises';
 import path from 'path';
 
-import FastGlob from 'fast-glob';
+import fastGlob from 'fast-glob';
 
 import { checkIfClean } from '../helpers/check-if-clean';
 import { logger } from '../utils/logger';
@@ -19,7 +19,7 @@ const describe: CommandModule<Argv, Argv>['describe'] =
 const handler: CommandModule<Argv, Argv>['handler'] = async (argv) => {
   await checkIfClean(argv);
 
-  const files = await FastGlob(argv.source, { dot: true, onlyFiles: true });
+  const files = await fastGlob(argv.source, { dot: true, onlyFiles: true });
   if (!files.length) {
     logger.warn('No files found to rename');
     return;
