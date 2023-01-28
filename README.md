@@ -22,6 +22,7 @@
 - [📖 Usage](#-usage)
   - [Commands](#commands)
   - [Options](#options)
+  - [Using config file](#using-config-file)
 - [💬 Contributing](#-contributing)
 - [❤️ Acknowledgments](#️-acknowledgments)
 <!-- [END] Don't edit this section, instead run Markdown AIO: Update Table of Contents -->
@@ -99,6 +100,33 @@ Use on CI:
 | --envMatcher          | Regex to match if file is environment specific.                                                                                                                                          | [string] [default: ".+[.][a-z]+\..+$"]                         |
 | --envMatcherSeparator | The environment separator on file names                                                                                                                                                  | [string] [default: "."]                                        |
 | --dryRun              | Run without making any actual changes                                                                                                                                                    | [boolean] [default: false]                                     |
+
+### Using config file
+
+We use [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) to load the config file, checkout some examples:
+
+`.aws-multi-envrc.json`
+```json
+{
+  "envs": {
+    "prod": ["main"],
+    "staging": ["beta"]
+  },
+  "source": ["./.ebextensions/**"]
+}
+```
+
+`.aws-multi-envrc.yml`
+```yml
+envs:
+  prod:
+    - main
+  staging:
+    - beta
+source:
+  - ./.ebextensions/**
+  - ./.platform/**
+```
 
 ## 💬 Contributing
 
