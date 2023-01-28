@@ -1,7 +1,8 @@
-// git clean -dxf .  # REMOVE ignored/untracked files (in the current directory)
-// git checkout -- . # ERASE changes in tracked files (in the current directory)
 import type { Argv } from '../options';
 import type { CommandModule } from 'yargs';
+
+import fs from 'fs';
+import path from 'path';
 
 import { execAsync } from '../utils/exec-async';
 import { logger } from '../utils/logger';
@@ -15,10 +16,20 @@ const describe: CommandModule<Argv, Argv>['describe'] = 'Undo changes on source 
 const handler: CommandModule<Argv, Argv>['handler'] = async (argv) => {
   logger.log('Renaming files back and restoring removed files');
 
-  const dirs = argv.source.join(' ');
+  const dirsThatExists = argv.source.filter((dir) => {
+    const dirname = path.dirname(dir);
+    return fs.existsSync(dirname);
+  });
 
-  // Remove ignored/untracked files
-  logger.log(`${tab}Running: git clean ${dirs}`);
+  if (!dirsThatExists.length) {
+    logger.success('Environment restored, no files found to be renamed back and/or restored');
+    return;
+  }
+
+  const dirs = dirsThatExists.join(' ');
+
+  // Remove ignored/untracked files `git clean -dxf ./dir`
+  logger.log(`${tab}Running: git clean -dxf ${dirs}`);
   if (!argv.dryRun) {
     const { stderr: stderrClean } = await execAsync(`git clean -dxf ${dirs}`);
     if (stderrClean) {
@@ -27,8 +38,8 @@ const handler: CommandModule<Argv, Argv>['handler'] = async (argv) => {
     }
   }
 
-  // Erase changes in tracked files
-  logger.log(`${tab}Running: git checkout ${dirs}`);
+  // Erase changes in tracked files `git checkout -- ./dir`
+  logger.log(`${tab}Running: git checkout -- ${dirs}`);
   if (!argv.dryRun) {
     const { stderr: stderrCheckout } = await execAsync(`git checkout -- ${dirs}`);
     if (stderrCheckout) {
