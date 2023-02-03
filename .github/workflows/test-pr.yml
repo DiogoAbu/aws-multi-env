@@ -40,3 +40,5 @@ jobs:
 
       - name: Test
         run: yarn test-ci
+        env:
+          TEST_BRANCH: ${{ github.ref_name }}
