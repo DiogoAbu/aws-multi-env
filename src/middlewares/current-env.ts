@@ -46,6 +46,6 @@ export const currentEnv: MiddlewareFunction<Argv> = async (argv) => {
     return;
   }
 
-  logger.error('Failed to find environment');
+  logger.error(`Failed to find environment (for branch ${currentBranch})`);
   process.exit(1);
 };

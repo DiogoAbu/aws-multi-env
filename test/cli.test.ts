@@ -70,7 +70,7 @@ test.serial('load correct environment', async (t) => {
   // Test when fails to find from branch
   const commandFail = runCommand(
     'config',
-    `--dry-run --envs.prod=main --envs.staging=beta --source="./${tmpDir}/.ebextensions/**"`,
+    `--dry-run --envs.prod=invalid-branch --source="./${tmpDir}/.ebextensions/**"`,
   );
   const error = await t.throwsAsync(commandFail);
   t.assert(error?.message.includes('Failed to find environment'), `${error?.message}`);
