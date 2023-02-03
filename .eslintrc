@@ -1,3 +1,9 @@
 {
-  "extends": ["superop", "superop/typescript"]
+  "extends": ["superop", "superop/typescript"],
+  "overrides": [
+    {
+      "extends": "plugin:ava/recommended",
+      "files": ["*.{spec,test}.{js,jsx,ts,tsx}"]
+    }
+  ]
 }
