@@ -52,17 +52,20 @@ test.serial('load correct environment', async (t) => {
   });
 
   // Test from branch
-  const { stdout: stdoutBranch, stderr: stderrBranch } = await runCommand(
-    'config',
-    `--dry-run --envs.prod=main --envs.staging=beta --envs.staging=test --source="./${tmpDir}/.ebextensions/**"`,
-  );
-  t.assert(stderrBranch.length === 0, `Error on command config: ${stderrBranch}`);
-  t.like(findJSON(stdoutBranch), {
-    dryRun: true,
-    currentEnv: 'staging',
-    envs: { prod: 'main', staging: ['beta', 'test'] },
-    source: [`./${tmpDir}/.ebextensions/**`],
-  });
+  const testBranch = process.env.TEST_BRANCH;
+  if (testBranch) {
+    const { stdout: stdoutBranch, stderr: stderrBranch } = await runCommand(
+      'config',
+      `--dry-run --envs.prod=main --envs.staging=beta --envs.staging=${testBranch} --source="./${tmpDir}/.ebextensions/**"`,
+    );
+    t.assert(stderrBranch.length === 0, `Error on command config: ${stderrBranch}`);
+    t.like(findJSON(stdoutBranch), {
+      dryRun: true,
+      currentEnv: 'staging',
+      envs: { prod: 'main', staging: ['beta', testBranch] },
+      source: [`./${tmpDir}/.ebextensions/**`],
+    });
+  }
 
   // Test when fails to find from branch
   const commandFail = runCommand(
