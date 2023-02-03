@@ -24,6 +24,9 @@ jobs:
           persist-credentials: false
           ref: ${{ github.event.pull_request.head.sha }}
 
+      - name: Switch branch
+        run: git switch -c test
+
       - name: Set up Node
         uses: actions/setup-node@v3
         with:
@@ -41,4 +44,4 @@ jobs:
       - name: Test
         run: yarn test-ci
         env:
-          TEST_BRANCH: ${{ github.ref_name }}
+          TEST_BRANCH: test
