@@ -51,7 +51,7 @@ test.serial('load correct environment', async (t) => {
     source: [`./${tmpDir}/.ebextensions/**`],
   });
 
-  // Test from branch
+  // Test loading current env from branch
   const testBranch = process.env.TEST_BRANCH;
   if (testBranch) {
     const { stdout: stdoutBranch, stderr: stderrBranch } = await runCommand(
