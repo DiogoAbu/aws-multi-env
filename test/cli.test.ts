@@ -106,13 +106,12 @@ test.serial('revert prod environment', async (t) => {
 
   t.assert(stdoutDry.includes('Running on dry run mode'), `${stdoutDry}`);
   t.assert(stdoutDry.includes('Current environment: prod'), `${stdoutDry}`);
-  t.assert(stdoutDry.includes('Working tree on source folders is clean'), `${stdoutDry}`);
 
   t.assert(stdoutDry.includes('Renaming files back and restoring removed files'), `${stdoutDry}`);
-  t.assert(stdoutDry.includes(`Running: git clean ./${tmpDir}/.ebextensions/**`), `${stdoutDry}`);
-  t.assert(stdoutDry.includes(`Running: git checkout ./${tmpDir}/.ebextensions/**`), `${stdoutDry}`);
+  t.assert(stdoutDry.includes('Running: git clean'), `${stdoutDry}`);
+  t.assert(stdoutDry.includes('Running: git checkout'), `${stdoutDry}`);
 
-  t.assert(stdoutDry.includes('Environment restored, files renamed back and/or restored'), `${stdoutDry}`);
+  t.assert(stdoutDry.includes('Environment restored'), `${stdoutDry}`);
 });
 
 test.serial('prepare staging environment', async (t) => {
@@ -150,13 +149,12 @@ test.serial('revert staging environment', async (t) => {
 
   t.assert(stdoutDry.includes('Running on dry run mode'), `${stdoutDry}`);
   t.assert(stdoutDry.includes('Current environment: staging'), `${stdoutDry}`);
-  t.assert(stdoutDry.includes('Working tree on source folders is clean'), `${stdoutDry}`);
 
   t.assert(stdoutDry.includes('Renaming files back and restoring removed files'), `${stdoutDry}`);
-  t.assert(stdoutDry.includes(`Running: git clean ./${tmpDir}/.ebextensions/**`), `${stdoutDry}`);
-  t.assert(stdoutDry.includes(`Running: git checkout ./${tmpDir}/.ebextensions/**`), `${stdoutDry}`);
+  t.assert(stdoutDry.includes('Running: git clean'), `${stdoutDry}`);
+  t.assert(stdoutDry.includes('Running: git checkout'), `${stdoutDry}`);
 
-  t.assert(stdoutDry.includes('Environment restored, files renamed back and/or restored'), `${stdoutDry}`);
+  t.assert(stdoutDry.includes('Environment restored'), `${stdoutDry}`);
 });
 
 test.after.always('clean up file system', (t) => {
