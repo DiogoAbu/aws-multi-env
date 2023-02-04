@@ -29,6 +29,9 @@ jobs:
           persist-credentials: false
           ref: ${{ github.event.inputs.checkoutRef }}
 
+      - name: Switch branch
+        run: git switch -c test
+
       - name: Set up Node
         uses: actions/setup-node@v3
         with:
@@ -45,6 +48,8 @@ jobs:
 
       - name: Test
         run: yarn test-ci
+        env:
+          TEST_BRANCH: test
 
       - name: Import GPG key
         id: import-gpg
