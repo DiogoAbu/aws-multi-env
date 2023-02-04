@@ -2,7 +2,7 @@ import type { Options } from 'yargs';
 
 export interface Argv {
   env?: string;
-  envs: Record<string, string[] | null>;
+  envs: Record<string, string | string[] | null>;
   source: string[];
   envMatcher: string;
   envMatcherSeparator: string;

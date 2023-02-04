@@ -32,8 +32,11 @@ export const currentEnv: MiddlewareFunction<Argv> = async (argv) => {
   const currentBranch = stdout.trim();
 
   const foundEnvFromBranch = Object.keys(argv.envs).find((envName) => {
-    if (argv.envs[envName]?.find((branch) => branch === currentBranch)) {
-      return true;
+    if (Array.isArray(argv.envs[envName])) {
+      return (argv.envs[envName] as string[]).find((branch) => branch === currentBranch);
+    }
+    if (typeof argv.envs[envName] === 'string') {
+      return argv.envs[envName] === currentBranch;
     }
     return false;
   });
@@ -43,6 +46,6 @@ export const currentEnv: MiddlewareFunction<Argv> = async (argv) => {
     return;
   }
 
-  logger.error('Failed to find environment');
+  logger.error(`Failed to find environment (for branch ${currentBranch})`);
   process.exit(1);
 };
