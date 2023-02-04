@@ -9,7 +9,7 @@
     <img alt="npm" src="https://img.shields.io/npm/v/aws-multi-env?style=flat-square">
   </a>
   <a href="https://github.com/DiogoAbu/aws-multi-env/actions">
-    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/DiogoAbu/aws-multi-env/Generate%20Release%20and%20Publish%20to%20NPM?label=Generate%20Release%20and%20Publish%20to%20NPM&style=flat-square">
+    <img alt="GitHub Workflow Status (with branch)" src="https://img.shields.io/github/actions/workflow/status/DiogoAbu/aws-multi-env/generate-release.yml?branch=main&label=Release%20Workflow&style=flat-square">
   </a>
 </p>
 
